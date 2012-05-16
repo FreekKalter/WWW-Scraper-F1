@@ -3,8 +3,6 @@ package WWW::Scraper::F1;
 use v5.14;
 use warnings;
 
-our $VERSION = '0.001';
-
 use parent qw(Exporter);
 use HTML::TreeBuilder;
 use LWP;
@@ -200,3 +198,14 @@ sub do_GET {
     return $resp->content;
 }
 1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+WWW::Scraper::F1 
+
+=head1 SYNOPSIS   
+Scrape info for upcoming race and current championship from formula1.com.
