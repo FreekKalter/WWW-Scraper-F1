@@ -208,4 +208,5 @@ __END__
 WWW::Scraper::F1 
 
 =head1 SYNOPSIS   
+
 Scrape info for upcoming race and current championship from formula1.com.
