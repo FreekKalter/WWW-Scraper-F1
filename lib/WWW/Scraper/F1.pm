@@ -10,14 +10,12 @@ use DateTime::Format::Natural;
 use DateTime::Format::Duration;
 use Time::Piece;
 use Storable;
-use Data::Dumper;
 
 our @EXPORT = qw(get_upcoming get_top);
 
 sub get_upcoming {
     my $total_info = &get_info;
     my $race_info = $total_info->{'race_info'};
-    my $output_format = shift;
     my $output    = '';
 
     my $now = $race_info->{'now'};
@@ -42,28 +40,22 @@ sub get_upcoming {
     }
 
     $output = "$race_info->{city}, $race_info->{country}\n$until_race_time\n";
-    if ( $output_format->{all} ) {
-        open my $handle, '>', $output_format->{all} or die "Cannot open file: $!";
-        print $handle $output;
-    }
-    elsif ( $output_format->{upcoming} ) {
-        open my $handle, '>', $output_format->{upcoming} or die "Cannot open file: $!";
-        print $handle $output;
-    }
-    else {
-        print $output;
-    }
+    return $output;
 }
 
 sub get_top {
+    my %options = @_;
     my $total_info = &get_info;
     my $championship_table = $total_info->{'championship_info'};
-    my ( $top_length, $points, $output_ref ) = @_;
-    my %output = %$output_ref;
+    my ( $top_length, $points) = @_;
     my $output = '';
+    #some defaults
 
-    for ( my $i = 1 ; $i <= $top_length ; $i++ ) {
-        given ($points) {
+    my $length =  $options{top_length} ? $options{top_length} : 5;
+    my $points_display =  $options{points} ? $options{points} : 'yes';
+
+    for ( my $i = 1 ; $i <= $length ; $i++ ) {
+        given ($points_display) {
             when (/no/) {
                 $output .= sprintf( "%d %-20s\n",
                     $i, $championship_table->[$i]->{'driver'} );
@@ -80,17 +72,7 @@ sub get_top {
             }
         }
     }
-    if ( $output{all} ) {
-        open my $handle, '>>', $output{all} or die "Cannot open file: $!";
-        print $handle $output;
-    }
-    elsif ( $output{top} ) {
-        open my $handle, '>', $output{top} or die "Cannot open file: $!";
-        print $handle $output;
-    }
-    else {
-        print $output;
-    }
+    return $output;
 }
 
 sub get_info {
