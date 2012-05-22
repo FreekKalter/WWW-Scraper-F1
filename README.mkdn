@@ -1,0 +1,76 @@
+# NAME
+
+WWW::Scraper::F1 
+
+# SYNOPSIS   
+
+    use WWW::Scraper:F1;
+
+    print get_top([length => 5 , points => just]);
+    print get_upcoming_race();
+
+# FUNCTIONS
+
+## get\_top\_championship
+
+get\_top(hash ref of options)
+blat
+
+## get\_upcoming\_race
+
+get\_upcoming\_race()
+
+# AUTHOR
+   
+
+    Freek Kalter
+    freek@kalteronline.org
+    http://kalteronline.org
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
