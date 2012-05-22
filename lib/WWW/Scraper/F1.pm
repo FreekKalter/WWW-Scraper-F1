@@ -11,9 +11,9 @@ use DateTime::Format::Duration;
 use Time::Piece;
 use Storable;
 
-our @EXPORT = qw(get_upcoming get_top);
+our @EXPORT = qw(get_upcoming_race get_top_championship);
 
-sub get_upcoming {
+sub get_upcoming_race{
     my $total_info = &get_info;
     my $race_info = $total_info->{'race_info'};
     my $output    = '';
@@ -43,7 +43,7 @@ sub get_upcoming {
     return $output;
 }
 
-sub get_top {
+sub get_top_championship{
     my $options = shift;
     $options->{points} = $options->{points} || "yes";
     $options->{length} = $options->{length} || 5;
@@ -190,5 +190,47 @@ WWW::Scraper::F1
 
    use WWW::Scraper:F1;
 
-   print get_upcoming_race([length => 5 , points => just]);
+   print get_top([length => 5 , points => just]);
+   print get_upcoming_race();
 
+=head1 FUNCTIONS
+
+=head2 get_top_championship
+
+get_top(hash ref of options)
+blat
+
+=head2 get_upcoming_race
+
+get_upcoming_race()
+
+=head1 AUTHOR
+   
+   Freek Kalter
+   freek@kalteronline.org
+   http://kalteronline.org
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
