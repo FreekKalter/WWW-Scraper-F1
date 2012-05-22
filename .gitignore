@@ -1,2 +1,4 @@
 *.sw[a-z]
 WWW-Scraper-F1-*
+*.cache
+*.tmp
