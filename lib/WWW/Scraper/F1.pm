@@ -11,9 +11,9 @@ use DateTime::Format::Duration;
 use Time::Piece;
 use Storable;
 
-our @EXPORT = qw(get_upcoming get_top);
+our @EXPORT = qw(get_upcoming_race get_top_championship);
 
-sub get_upcoming {
+sub get_upcoming_race{
     my $total_info = &get_info;
     my $race_info = $total_info->{'race_info'};
     my $output    = '';
@@ -43,19 +43,16 @@ sub get_upcoming {
     return $output;
 }
 
-sub get_top {
-    my %options = @_;
+sub get_top_championship{
+    my $options = shift;
+    $options->{points} = $options->{points} || "yes";
+    $options->{length} = $options->{length} || 5;
     my $total_info = &get_info;
     my $championship_table = $total_info->{'championship_info'};
-    my ( $top_length, $points) = @_;
     my $output = '';
-    #some defaults
 
-    my $length =  $options{top_length} ? $options{top_length} : 5;
-    my $points_display =  $options{points} ? $options{points} : 'yes';
-
-    for ( my $i = 1 ; $i <= $length ; $i++ ) {
-        given ($points_display) {
+    for ( my $i = 1 ; $i <= $options->{length} ; $i++ ) {
+        given ($options->{points}) {
             when (/no/) {
                 $output .= sprintf( "%d %-20s\n",
                     $i, $championship_table->[$i]->{'driver'} );
@@ -191,7 +188,15 @@ WWW::Scraper::F1
 
 =head1 SYNOPSIS   
 
-Scrape info for upcoming race and current championship from formula1.com.
+   use WWW::Scraper:F1;
+
+   print get_top([length => 5 , points => just]);
+   print get_upcoming_race();
+
+=head1 FUNCTIONS
+
+
+=head2 get_top_championship
 
 
 This functions retrieves the current championshiip.  it returns a reference to an array of hashes. By default it
@@ -211,3 +216,23 @@ lenght : How many drivers from the top you want.
 =item *
 
 points : (no, just, both) 
+
+=head2 get_upcoming_race
+
+get_top()
+
+=head2 get_upcoming_race
+
+get_upcoming_race() hell yeah
+
+=head1 INTERNALS
+
+This module caches the results fetch from f1.com for futher use. Since the actual data only changes after a race, it only needs to fetch it again if the cache is older then the previous race. 
+
+=head1 AUTHOR
+
+This module caches the results fetch from f1.com for futher use. Since the actual data only changes after a race, it only needs to fetch it again if the cache is older then the previous race. 
+
+=head1 COPYRIGHT
+
+This module is distributed under the same lincense as perl5 itself.

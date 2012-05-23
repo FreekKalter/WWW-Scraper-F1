@@ -1,3 +1,8 @@
 *.sw[a-z]
-WWW-Scraper-F1-*
 *.cache
+*.tmp
+
+# generated files
+
+html-help*
+WWW-Scraper-F1-*
