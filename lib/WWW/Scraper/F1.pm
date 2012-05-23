@@ -192,3 +192,22 @@ WWW::Scraper::F1
 =head1 SYNOPSIS   
 
 Scrape info for upcoming race and current championship from formula1.com.
+
+
+This functions retrieves the current championshiip.  it returns a reference to an array of hashes. By default it
+returns the top 5 drivers like this.
+
+[
+    { name Sebastian Vettel , points 55 , team Red Bull Racing }
+    { name Fernando Alonso  , points 40 , team Ferrari }
+]
+
+You can specify options via a hash reference get_top_chamionship( {length => 3, points => 'just'});
+The options available are:
+=item *
+
+lenght : How many drivers from the top you want. 
+
+=item *
+
+points : (no, just, both) 
