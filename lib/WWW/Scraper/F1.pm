@@ -197,40 +197,20 @@ WWW::Scraper::F1
 
 =head2 get_top_championship
 
-get_top(hash ref of options)
-blat
+get_top()
 
 =head2 get_upcoming_race
 
-get_upcoming_race()
+get_upcoming_race() hell yeah
+
+=head1 INTERNALS
+
+This module caches the results fetch from f1.com for futher use. Since the actual data only changes after a race, it only needs to fetch it again if the cache is older then the previous race. 
 
 =head1 AUTHOR
-   
-   Freek Kalter
-   freek@kalteronline.org
-   http://kalteronline.org
 
+This module caches the results fetch from f1.com for futher use. Since the actual data only changes after a race, it only needs to fetch it again if the cache is older then the previous race. 
 
+=head1 COPYRIGHT
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
+This module is distributed under the same lincense as perl5 itself.
