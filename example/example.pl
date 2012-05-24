@@ -17,6 +17,6 @@ GetOptions(
     'points=s'  => \$points,
 );
 
-print get_upcoming( ) if ($upcoming);
-print get_top( {length => $top, points => $points} );
+print get_upcoming_race( ) if ($upcoming);
+print get_top_championship( {length => $top, points => $points} );
 
