@@ -10,6 +10,7 @@ use DateTime::Format::Natural;
 use DateTime::Format::Duration;
 use Time::Piece;
 use Storable;
+use Data::Dumper qw(Dumper);
 
 our @EXPORT = qw(get_upcoming_race get_top_championship);
 
@@ -38,8 +39,12 @@ sub get_upcoming_race{
     if ( $now > $dt ) {
         $until_race_time .= " ago";
     }
+    $output = { 'city' => $race_info->{city},
+                'country' => $race_info->{country},
+                'time' => $dt->strftime("%d/%m/%y %T"),
+                'countdown' => $until_race_time,
+    };
 
-    $output = "$race_info->{city}, $race_info->{country}\n$until_race_time\n";
     return $output;
 }
 
@@ -49,27 +54,13 @@ sub get_top_championship{
     $options->{length} = $options->{length} || 5;
     my $total_info = &get_info;
     my $championship_table = $total_info->{'championship_info'};
-    my $output = '';
 
+    my @ra = ();
     for ( my $i = 1 ; $i <= $options->{length} ; $i++ ) {
-        given ($options->{points}) {
-            when (/no/) {
-                $output .= sprintf( "%d %-20s\n",
-                    $i, $championship_table->[$i]->{'driver'} );
-            }
-            when (/just/) {
-                $output .=
-                  sprintf( "%d\n", $championship_table->[$i]->{'points'} );
-            }
-            default {    # default, print both tab separated
-                $output .= sprintf( "%d %-20s %-3s\n",
-                    $i,
-                    $championship_table->[$i]->{'driver'},
-                    $championship_table->[$i]->{'points'} );
-            }
-        }
+       my $tuple = { 'pos' => $i , 'driver' => $championship_table->[$i]->{'driver'} , 'points' =>  $championship_table->[$i]->{'points'} };
+       push @ra, $tuple;
     }
-    return $output;
+    return \@ra;
 }
 
 sub get_info {
