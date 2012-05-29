@@ -11,66 +11,44 @@ WWW::Scraper::F1
 
 # FUNCTIONS
 
+
+
 ## get\_top\_championship
 
-get\_top(hash ref of options)
-blat
+
+
+This functions retrieves the current championshiip.  it returns a reference to an array of hashes. By default it
+returns the top 5 drivers like this.
+
+\[
+    { name Sebastian Vettel , points 55 , team Red Bull Racing }
+    { name Fernando Alonso  , points 40 , team Ferrari }
+\]
+
+You can specify options via a hash reference get\_top\_chamionship( {length => 3, points => 'just'});
+The options available are:
+=item \*
+
+lenght : How many drivers from the top you want. 
+
+- points : (no, just, both) 
 
 ## get\_upcoming\_race
 
-get\_upcoming\_race()
+get\_top()
+
+## get\_upcoming\_race
+
+get\_upcoming\_race() hell yeah
+
+# INTERNALS
+
+This module caches the results fetch from f1.com for futher use. Since the actual data only changes after a race, it only needs to fetch it again if the cache is older then the previous race. 
 
 # AUTHOR
-   
 
-    Freek Kalter
-    freek@kalteronline.org
-    http://kalteronline.org
+This module caches the results fetch from f1.com for futher use. Since the actual data only changes after a race, it only needs to fetch it again if the cache is older then the previous race. 
 
+# COPYRIGHT
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
+This module is distributed under the same lincense as perl5 itself.
