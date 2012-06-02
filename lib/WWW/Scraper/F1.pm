@@ -1,6 +1,7 @@
 package WWW::Scraper::F1;
 
 use v5.14;
+use strict;
 use warnings;
 
 use parent qw(Exporter);
@@ -173,48 +174,46 @@ __END__
 
 =pod
 
-=head1 NAME
+=encoding utf-8
 
-WWW::Scraper::F1 
+=head1 NAME
+                                        
+WWW::Scraper::F1 - Use f1.com race data seamlessly in perl.
 
 =head1 SYNOPSIS   
 
    use WWW::Scraper:F1;
 
-   print get_top([length => 5 , points => just]);
-   print get_upcoming_race();
+   my $top      = get_top_championship( { length => 5 } );
+   my $upcoming = get_upcoming_race();
 
 =head1 FUNCTIONS
 
 
-=head2 get_top_championship
-
+=head2 get_top_championship()
 
 This functions retrieves the current championshiip.  it returns a reference to an array of hashes. By default it
 returns the top 5 drivers like this.
 
-[
-    { name Sebastian Vettel , points 55 , team Red Bull Racing }
-    { name Fernando Alonso  , points 40 , team Ferrari }
-]
+   [
+       { name Sebastian Vettel , points 55 , team Red Bull Racing }
+       { name Fernando Alonso  , points 40 , team Ferrari }
+   ]
 
-You can specify options via a hash reference get_top_chamionship( {length => 3, points => 'just'});
-The options available are:
-=item *
+You can specify options via a hash reference C<get_top_chamionship( {length => 3} )>
 
-lenght : How many drivers from the top you want. 
+=head2 get_upcoming_race()
 
-=item *
+This function returns a reference to hash. The hash elements contains information about the upcoming race.
+The hash looks like this:
 
-points : (no, just, both) 
+   {
+     'country'    => 'Canada',
+     'city'       => 'Montreal',
+     'time'       => '10/06/12 20:00:00',
+     'countdown'  => '7 days 21 hours'
+   }
 
-=head2 get_upcoming_race
-
-get_top()
-
-=head2 get_upcoming_race
-
-get_upcoming_race() hell yeah
 
 =head1 INTERNALS
 
@@ -222,7 +221,9 @@ This module caches the results fetch from f1.com for futher use. Since the actua
 
 =head1 AUTHOR
 
-This module caches the results fetch from f1.com for futher use. Since the actual data only changes after a race, it only needs to fetch it again if the cache is older then the previous race. 
+Freek Kalter
+freek@kalteronline.org
+http://kalteronline.org
 
 =head1 COPYRIGHT
 
