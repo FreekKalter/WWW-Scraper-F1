@@ -1,6 +1,5 @@
 package WWW::Scraper::F1;
 
-use v5.14;
 use strict;
 use warnings;
 
@@ -96,14 +95,14 @@ sub build_from_internet {
     my %info              = ();
     my $race_info_content = do_GET("http://www.formula1.com/default.html");
     if ( !$race_info_content ) {    #get failed (no internet connection)
-        say "race_info: No internet connection and no cache";
+        print "race_info: No internet connection and no cache\n";
     }
 
     my $now = DateTime->now();
     my $championship_content =
       do_GET( "http://www.formula1.com/results/driver/" . $now->year );
     if ( !$championship_content ) {    #get failed (no internet connection)
-        say "championship: No internet connection and no cache";
+        print "championship: No internet connection and no cache\n";
     }
     $info{'race_content'}         = $race_info_content;
     $info{'championship_content'} = $championship_content;
@@ -172,9 +171,10 @@ sub do_GET {
 
 __END__
 
+
 =pod
 
-=encoding utf-8
+=encoding utf8
 
 =head1 NAME
                                         
