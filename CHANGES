@@ -1,7 +1,14 @@
+v0.004
+
+   * Fixed  'byte-order' bug when building on 64-bit systems.
+   * Added Pod test.
+   * Removed unnecessary files from dist.
+   * Lowered minimum Perl version required.
+
 v0.003
 
    * Added tests.
-   * Functions now return real perl data-structures
+   * Functions now return real perl data-structures.
 
 v0.002
    
