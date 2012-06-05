@@ -1,3 +1,8 @@
+v0.005
+
+   * Fixed build problems on perl version under 5.14.
+      (no s///r anymore)
+   
 v0.004
 
    * Fixed  'byte-order' bug when building on 64-bit systems.
