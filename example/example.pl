@@ -2,8 +2,10 @@ use warnings;
 use strict;
 use utf8;
 
-use Getopt::Long;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
 use WWW::Scraper::F1;
+use Getopt::Long;
 
 my $upcoming = 1;
 my $top      = -1;
