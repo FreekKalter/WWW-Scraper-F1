@@ -6,3 +6,6 @@
 
 html-help*
 WWW-Scraper-F1-*
+*.out
+nytprof
+*.html

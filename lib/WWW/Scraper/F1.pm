@@ -16,7 +16,9 @@ use Data::Dumper qw(Dumper);
 our @EXPORT = qw(get_upcoming_race get_top_championship);
 
 sub get_upcoming_race{
-    my $total_info = &get_info;
+    my $options = shift;
+    my $total_info = &get_info($options->{cache} // "1");
+
     my $race_info = $total_info->{'race_info'};
     my $output    = '';
 
@@ -51,8 +53,10 @@ sub get_upcoming_race{
 
 sub get_top_championship{
     my $options = shift;
-    $options->{points} = $options->{points} || "yes";
-    $options->{length} = $options->{length} || 5;
+    $options->{points}  ||= "yes";
+    $options->{length}  ||= 5;
+    $options->{cache}   ||= "1";
+    return if $options->{length} < 1;
     my $total_info = &get_info;
     my $championship_table = $total_info->{'championship_info'};
 
@@ -65,10 +69,11 @@ sub get_top_championship{
 }
 
 sub get_info {
+    my $cache = shift;
     my $cache_name = "f1.cache";
     my ( $cache_content, $total_info );
     my $now = DateTime->now( time_zone => 'local' );
-    if ( -e $cache_name ) {    #cache file exists
+    if ( $cache && -e $cache_name ) {    #cache file exists
         $cache_content = retrieve($cache_name);
 
         if ( $now > $cache_content->{'race_info'}->{'time'} ) {
@@ -216,6 +221,16 @@ The hash looks like this:
      'countdown'  => '7 days 21 hours'
    }
 
+You can specify options via a hash refernce, C<get_upcoming_rac( { cache => 0 } )>
+Available options:
+
+=over 3
+
+=item cache
+
+Set this to 0, to not use the internal cache mechanism. This will disable reading form the cache file, it will still write the results of the call to it.
+
+=back
 
 =head1 INTERNALS
 
@@ -225,7 +240,7 @@ This module caches the results fetch from f1.com for futher use. Since the actua
 
 Freek Kalter
 freek@kalteronline.org
-http://kalteronline.org
+L<http://kalteronline.org>
 
 =head1 COPYRIGHT
 
