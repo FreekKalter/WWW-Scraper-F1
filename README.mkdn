@@ -38,7 +38,12 @@ The hash looks like this:
       'countdown'  => '7 days 21 hours'
     }
 
+You can specify options via a hash refernce, `get_upcoming_rac( { cache =` 0 } )>
+Available options:
 
+- cache
+
+Set this to 0, to not use the internal cache mechanism. This will disable reading form the cache file, it will still write the results of the call to it.
 
 # INTERNALS
 
@@ -48,7 +53,7 @@ This module caches the results fetch from f1.com for futher use. Since the actua
 
 Freek Kalter
 freek@kalteronline.org
-http://kalteronline.org
+[http://kalteronline.org](http://kalteronline.org)
 
 # COPYRIGHT
 

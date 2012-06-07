@@ -1,11 +1,15 @@
-use warnings;
+use v5.12;
 use strict;
+use warnings;
+use warnings   qw(FATAL utf8);
+use open       qw(:std :utf8);
+use charnames  qw(:full :short);
 
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 use WWW::Scraper::F1;
 
-use Test::More 'no_plan';
+use Test::More tests => 7;
 
 BEGIN { use_ok('WWW::Scraper::F1') }
 
@@ -21,6 +25,8 @@ is(scalar @{ get_top_championship( { length => 10 } ) }, 10 , 'top_championship 
 like($top->[0]{points} , qr/\d{0,3}/ , 'get_top_championship returns points in its hash');
 
 like($race->{countdown} ,  qr/^(\d{1,3} days)?(\d{1,2} hours)?.*$/ , 'upcoming race countdown pattern match');
+
+done_testing();
 
 #like(get_upcoming_race(), qr/^\w+\s*\w+, \w+\n(\d{1,3} days)?(\d{1,2} hours)?.*$/, 'get_upcoming_race() pattern match');
 #like(get_top_championship({points => 'just', length => 5}) , qr/^(\d{0,3}\n){5}$/ , 'get_top_championship({ points => \'just\', length => 5} ) pattern match');

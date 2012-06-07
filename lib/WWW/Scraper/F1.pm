@@ -1,10 +1,14 @@
 package WWW::Scraper::F1;
 
-use v5.8;
+use v5.12;
 use strict;
 use warnings;
+use warnings   qw(FATAL utf8);
+use open       qw(:std :utf8);
+use charnames  qw(:full :short);
 
 use parent qw(Exporter);
+use Unicode::Normalize;
 use HTML::TreeBuilder;
 use LWP;
 use DateTime::Format::Natural;
@@ -124,6 +128,7 @@ sub extract_info_from_web_content {
 
     #race time extraction
     foreach my $line ( split( '\n', $web_content->{'race_content'} ) ) {
+        $line = NFD($line);
         if ( $line =~ m/grand_prix\[0\]\.sessions/ ) {
             $line =~ m/'Race','(.+)'/;
             my $parser = DateTime::Format::Natural->new( time_zone => 'GMT' );
