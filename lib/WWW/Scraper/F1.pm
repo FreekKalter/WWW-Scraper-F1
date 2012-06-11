@@ -226,7 +226,7 @@ The hash looks like this:
      'countdown'  => '7 days 21 hours'
    }
 
-You can specify options via a hash refernce, C<get_upcoming_rac( { cache => 0 } )>
+You can specify options via a hash refernce, C<< get_upcoming_rac( { cache => 0 } ) >>
 Available options:
 
 =over 3
