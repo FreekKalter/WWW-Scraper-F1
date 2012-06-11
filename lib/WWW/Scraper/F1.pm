@@ -212,7 +212,7 @@ returns the top 5 drivers like this.
        { name Fernando Alonso  , points 40 , team Ferrari }
    ]
 
-You can specify options via a hash reference C<< get_top_chamionship( {length => 3} )>>
+You can specify options via a hash reference C<< get_top_chamionship( {length => 3} ) >>
 
 =head2 get_upcoming_race()
 
