@@ -1,6 +1,7 @@
 *.sw[a-z]
 *.cache
 *.tmp
+.DS_Store
 
 # generated files
 
