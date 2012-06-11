@@ -1,4 +1,4 @@
-use v5.12;
+use v5.14;
 use strict;
 use warnings;
 use warnings   qw(FATAL utf8);
@@ -10,6 +10,7 @@ use lib "$FindBin::Bin/../lib";
 use WWW::Scraper::F1;
 use Getopt::Long;
 use Unicode::Normalize;
+use Carp;
 
 my $upcoming    = 1;
 my $top         = -1;
@@ -25,9 +26,7 @@ GetOptions(
 
 if ($upcoming){
    my $race_info = get_upcoming_race( {cache => $cache}  ) ;
-   my $output  = "$race_info->{city}, $race_info->{country}\n$race_info->{countdown}\n";
-   open my $handle, '>', "upcoming.txt" or die "Cannot open file: $!";
-   print $handle $output;
+   print "$race_info->{city}, $race_info->{country}\n$race_info->{countdown}\n";
 }
 
 my $champ_info = get_top_championship( {length => $top, cache => $cache} );

@@ -1,6 +1,6 @@
 package WWW::Scraper::F1;
 
-use v5.12;
+use v5.14;
 use strict;
 use warnings;
 use warnings   qw(FATAL utf8);
