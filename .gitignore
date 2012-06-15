@@ -10,3 +10,4 @@ WWW-Scraper-F1-*
 *.out
 nytprof
 *.html
+.build
