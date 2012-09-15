@@ -1,4 +1,7 @@
-language: perl
+language: "perl"
 perl:
     - "5.16"
     - "5.14"
+
+script: "perl Makefile.PL && make test"
+
