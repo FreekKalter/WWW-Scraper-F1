@@ -204,7 +204,7 @@ WWW::Scraper::F1 - Use f1.com race data seamlessly in perl.
 
 =head2 get_top_championship()
 
-This functions retrieves the current championshiip.  it returns a reference to an array of hashes. By default it
+This functions retrieves the current championship. It returns a reference to an array of hashes. By default it
 returns the top 5 drivers like this.
 
    [
@@ -216,7 +216,7 @@ You can specify options via a hash reference C<< get_top_chamionship( {length =>
 
 =head2 get_upcoming_race()
 
-This function returns a reference to hash. The hash elements contains information about the upcoming race.
+This function returns a reference to a hash. The hash elements contain information about the upcoming race.
 The hash looks like this:
 
    {
@@ -239,12 +239,14 @@ Set this to 0, to not use the internal cache mechanism. This will disable readin
 
 =head1 INTERNALS
 
-This module caches the results fetch from f1.com for futher use. Since the actual data only changes after a race, it only needs to fetch it again if the cache is older then the previous race. 
+This module caches the results fetched from f1.com for futher use. Since the actual data only changes after a race, it only needs to fetch it again if the cache is older then the previous race. 
 
 =head1 AUTHOR
 
 Freek Kalter
+
 freek@kalteronline.org
+
 L<http://kalteronline.org>
 
 =head1 COPYRIGHT
