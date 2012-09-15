@@ -3,5 +3,11 @@ perl:
     - "5.16"
     - "5.14"
 
+before_script:
+    - cpanm Dist::Zilla
+    - dzil authordeps | cpanm
+    - dzil build
+    - cd WWW-Scraper-F1-0.005
+    
 script: "perl Makefile.PL && make test"
 
