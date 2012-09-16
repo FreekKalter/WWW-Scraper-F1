@@ -191,6 +191,7 @@ __END__
 =head1 NAME
                                         
 WWW::Scraper::F1 - Use f1.com race data seamlessly in perl.
+[![Build Status](https://secure.travis-ci.org/FreekKalter/WWW-Scraper-F1.png)](http://travis-ci.org/FreekKalter/WWW-Scraper-F1)
 
 =head1 SYNOPSIS   
 
