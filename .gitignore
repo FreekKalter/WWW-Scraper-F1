@@ -2,6 +2,7 @@
 *.cache
 *.tmp
 .DS_Store
+extlib*
 
 # generated files
 
