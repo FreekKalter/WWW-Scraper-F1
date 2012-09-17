@@ -3,9 +3,9 @@ package WWW::Scraper::F1;
 use v5.14;
 use strict;
 use warnings;
-use warnings   qw(FATAL utf8);
-use open       qw(:std :utf8);
-use charnames  qw(:full :short);
+use warnings qw(FATAL utf8);
+use open qw(:std :utf8);
+use charnames qw(:full :short);
 
 use parent qw(Exporter);
 use Encode;
@@ -18,9 +18,9 @@ use Storable;
 
 our @EXPORT = qw(get_upcoming_race get_top_championship);
 
-sub get_upcoming_race{
+sub get_upcoming_race {
     my $options = shift;
-    my $total_info = &get_info($options->{cache} // "1");
+    my $total_info = &get_info( $options->{cache} // "1" );
 
     my $race_info = $total_info->{'race_info'};
     my $output    = '';
@@ -28,7 +28,7 @@ sub get_upcoming_race{
     my $now = $race_info->{'now'};
     my $dt  = $race_info->{'time'};
 
-    #convert datetime objects to Time::Piece objects, for actual day calculation (datetime object seem to want to convert 41 days to 1 month and some days)
+#convert datetime objects to Time::Piece objects, for actual day calculation (datetime object seem to want to convert 41 days to 1 month and some days)
     my $t1 =
       Time::Piece->strptime( $dt->strftime("%y %m %d %T"), "%y %m %d %T" );
     my $t2 =
@@ -38,41 +38,46 @@ sub get_upcoming_race{
     my $diff_days = int $diff->days;    #use Time::Piece to calculate days left
     $diff = $dt - $now;
 
-    #check if days or hours is 0 to prevent output like this ( 12 days 0 hours) this becomes just (12 days)
+#check if days or hours is 0 to prevent output like this ( 12 days 0 hours) this becomes just (12 days)
     my $until_race_time = sprintf( "%s%s",
         ( $diff_days > 0 )   ? "$diff_days days "       : "",
         ( $diff->hours > 0 ) ? "${\$diff->hours} hours" : "" );
     if ( $now > $dt ) {
         $until_race_time .= " ago";
     }
-    $output = { 'city' => $race_info->{city},
-                'country' => $race_info->{country},
-                'time' => $dt->strftime("%d/%m/%y %T"),
-                'countdown' => $until_race_time,
+    $output = {
+        'city'      => $race_info->{city},
+        'country'   => $race_info->{country},
+        'time'      => $dt->strftime("%d/%m/%y %T"),
+        'countdown' => $until_race_time,
     };
 
     return $output;
 }
 
-sub get_top_championship{
+sub get_top_championship {
     my $options = shift;
-    $options->{points}  ||= "yes";
-    $options->{length}  ||= 5;
-    $options->{cache}   ||= "1";
+    $options->{points} ||= "yes";
+    $options->{length} ||= 5;
+    $options->{cache}  ||= "1";
     return if $options->{length} < 1;
-    my $total_info = &get_info;
+    my $total_info         = &get_info;
     my $championship_table = $total_info->{'championship_info'};
 
     my @ra = ();
     for ( my $i = 1 ; $i <= $options->{length} ; $i++ ) {
-       my $tuple = { 'pos' => $i , 'driver' => $championship_table->[$i]->{'driver'} , 'points' =>  $championship_table->[$i]->{'points'} };
-       push @ra, $tuple;
+        my $tuple = {
+            'pos'    => $i,
+            'driver' => $championship_table->[$i]->{'driver'},
+            'points' => $championship_table->[$i]->{'points'}
+        };
+        push @ra, $tuple;
     }
     return \@ra;
 }
 
 sub get_info {
-    my $cache = shift;
+    my $cache      = shift;
     my $cache_name = "f1.cache";
     my ( $cache_content, $total_info );
     my $now = DateTime->now( time_zone => 'local' );
@@ -80,9 +85,9 @@ sub get_info {
         $cache_content = retrieve($cache_name);
 
         if ( $now > $cache_content->{'race_info'}->{'time'} ) {
-           my $web_content = &build_from_internet();
-           return undef if not $web_content;
-           $total_info = &extract_info_from_web_content($web_content);
+            my $web_content = &build_from_internet();
+            return undef if not $web_content;
+            $total_info = &extract_info_from_web_content($web_content);
             store $total_info, $cache_name;
         }
         else {
@@ -91,9 +96,9 @@ sub get_info {
 
     }
     else {    #get info from web, extract info and put it in a cacheble hash
-       my $web_content = &build_from_internet();
-       return undef if not $web_content;
-       $total_info = &extract_info_from_web_content($web_content);
+        my $web_content = &build_from_internet();
+        return undef if not $web_content;
+        $total_info = &extract_info_from_web_content($web_content);
         store $total_info, $cache_name;
     }
     $total_info->{'race_info'}->{'now'} = $now;
@@ -101,21 +106,23 @@ sub get_info {
 }
 
 sub build_from_internet {
-    my %info              = ();
-    my $race_info_content = decode_utf8(do_GET("http://www.formula1.com/default.html"));
+    my %info = ();
+    my $race_info_content =
+      decode_utf8( do_GET("http://www.formula1.com/default.html") );
     if ( !$race_info_content ) {    #get failed (no internet connection)
         print "race_info: No internet connection and no cache\n";
     }
 
     my $now = DateTime->now();
     my $championship_content =
-      decode_utf8(do_GET( "http://www.formula1.com/results/driver/" . $now->year ));
+      decode_utf8(
+        do_GET( "http://www.formula1.com/results/driver/" . $now->year ) );
     if ( !$championship_content ) {    #get failed (no internet connection)
         print "championship: No internet connection and no cache\n";
     }
     $info{'race_content'}         = $race_info_content;
     $info{'championship_content'} = $championship_content;
-    return undef if(!$race_info_content || !$championship_content);
+    return undef if ( !$race_info_content || !$championship_content );
     return \%info;
 }
 
@@ -131,7 +138,7 @@ sub extract_info_from_web_content {
             $line =~ m/'Race','(.+)'/;
             my $parser = DateTime::Format::Natural->new( time_zone => 'GMT' );
             my $dt = $parser->parse_datetime( $parser->extract_datetime($1) );
-            $dt->set_time_zone( DateTime::TimeZone->new( name => 'local' ) ) ;    #convert timezone to local
+            $dt->set_time_zone( DateTime::TimeZone->new( name => 'local' ) );  #convert timezone to local
             $race_info->{time} = $dt;
         }
     }
@@ -144,7 +151,8 @@ sub extract_info_from_web_content {
       $root->find_by_attribute( "id", "city_name" )->as_trimmed_text();
 
     $race_info->{city} =~ s/[\P{alpha}]//;
-    $race_info->{city} = ucfirst lc $race_info->{city};   #strip the html gunk, by removing all Non-alpha chars
+    $race_info->{city} = ucfirst lc
+      $race_info->{city};  #strip the html gunk, by removing all Non-alpha chars
 
     $total_info->{'race_info'} = $race_info;
 
