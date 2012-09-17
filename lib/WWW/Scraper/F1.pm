@@ -8,14 +8,13 @@ use open       qw(:std :utf8);
 use charnames  qw(:full :short);
 
 use parent qw(Exporter);
-use Unicode::Normalize;
+use Encode;
 use HTML::TreeBuilder;
 use LWP;
 use DateTime::Format::Natural;
 use DateTime::Format::Duration;
 use Time::Piece;
 use Storable;
-use Data::Dumper qw(Dumper);
 
 our @EXPORT = qw(get_upcoming_race get_top_championship);
 
@@ -103,14 +102,14 @@ sub get_info {
 
 sub build_from_internet {
     my %info              = ();
-    my $race_info_content = do_GET("http://www.formula1.com/default.html");
+    my $race_info_content = decode_utf8(do_GET("http://www.formula1.com/default.html"));
     if ( !$race_info_content ) {    #get failed (no internet connection)
         print "race_info: No internet connection and no cache\n";
     }
 
     my $now = DateTime->now();
     my $championship_content =
-      do_GET( "http://www.formula1.com/results/driver/" . $now->year );
+      decode_utf8(do_GET( "http://www.formula1.com/results/driver/" . $now->year ));
     if ( !$championship_content ) {    #get failed (no internet connection)
         print "championship: No internet connection and no cache\n";
     }
@@ -128,7 +127,6 @@ sub extract_info_from_web_content {
 
     #race time extraction
     foreach my $line ( split( '\n', $web_content->{'race_content'} ) ) {
-        $line = NFD($line);
         if ( $line =~ m/grand_prix\[0\]\.sessions/ ) {
             $line =~ m/'Race','(.+)'/;
             my $parser = DateTime::Format::Natural->new( time_zone => 'GMT' );
