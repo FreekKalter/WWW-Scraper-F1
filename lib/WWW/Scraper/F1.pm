@@ -117,6 +117,7 @@ sub build_from_internet {
     my $championship_content =
       decode_utf8(
         do_GET( "http://www.formula1.com/results/driver/" . $now->year ) );
+    say $championship_content;
     if ( !$championship_content ) {    #get failed (no internet connection)
         print "championship: No internet connection and no cache\n";
     }
@@ -195,16 +196,16 @@ __END__
 =encoding utf8
 
 =head1 NAME
-                                        
+
 WWW::Scraper::F1 - Use f1.com race data seamlessly in perl.
-    
+
 =begin html
 
 <a href="http://travis-ci.org/FreekKalter/WWW-Scraper-F1"><img src="https://secure.travis-ci.org/FreekKalter/WWW-Scraper-F1.png" alt="Build status"></a>
 
 =end html
 
-=head1 SYNOPSIS   
+=head1 SYNOPSIS
 
    use WWW::Scraper:F1;
 
@@ -251,7 +252,7 @@ Set this to 0, to not use the internal cache mechanism. This will disable readin
 
 =head1 INTERNALS
 
-This module caches the results fetched from f1.com for futher use. Since the actual data only changes after a race, it only needs to fetch it again if the cache is older then the previous race. 
+This module caches the results fetched from f1.com for futher use. Since the actual data only changes after a race, it only needs to fetch it again if the cache is older then the previous race.
 
 =head1 AUTHOR
 
