@@ -246,8 +246,8 @@ This functions retrieves the current championship. It returns a reference to an 
 returns the top 5 drivers like this.
 
    [
-       { name Sebastian Vettel , points 55 , team Red Bull Racing }
-       { name Fernando Alonso  , points 40 , team Ferrari }
+       { name => "Sebastian Vettel" , points => 55 , team => "Red Bull Racing" }
+       { name => "Fernando Alonso"  , points => 40 , team => "Ferrari" }
    ]
 
 You can specify options via a hash reference C<< get_top_chamionship( {length => 3} ) >>
