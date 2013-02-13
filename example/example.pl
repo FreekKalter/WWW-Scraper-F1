@@ -33,10 +33,10 @@ my $champ_info = get_top_championship( {length => $top, cache => $cache} );
 
 foreach my $t (@$champ_info){
    if($points eq "no"){
-       print "$t->{pos}. $t->{driver}\n"; 
+       print "$t->{pos}. $t->{driver}\n";
    }elsif($points eq "just"){
        print "$t->{points}\n";
    }else{
-       print "$t->{pos}. $t->{driver}\t $t->{points}\n"; 
+       print "$t->{pos}. $t->{driver}\t $t->{points}\n";
    }
 }
