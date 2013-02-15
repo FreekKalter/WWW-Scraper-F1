@@ -1,3 +1,7 @@
+v0.007
+    * Scpecified modules minimum versions, to hopefully pass more tests
+    * fixed a documentation error
+
 v0.006
    
    * Fuck it, update your perl 5.14, requered now.
