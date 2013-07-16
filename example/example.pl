@@ -16,8 +16,10 @@ my $upcoming    = 1;
 my $top         = -1;
 my $points      = '';
 my $cache       = 1;
+my $year = 2013;
 
 GetOptions(
+    'year:i' => \$year,
     'upcoming!' => \$upcoming,
     'cache!'     => \$cache,
     'top:i'     => \$top,
@@ -29,7 +31,7 @@ if ($upcoming){
    print "$race_info->{city}, $race_info->{country}\n$race_info->{countdown}\n";
 }
 
-my $champ_info = get_top_championship( {length => $top, cache => $cache} );
+my $champ_info = get_top_championship( {length => $top, cache => $cache, year => $year} );
 
 foreach my $t (@$champ_info){
    if($points eq "no"){
