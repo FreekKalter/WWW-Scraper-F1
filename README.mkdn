@@ -27,37 +27,55 @@ returns the top 5 drivers like this.
 
 You can specify options via a hash reference `get_top_chamionship( {length => 3} )`
 
-## get\_upcoming\_race()
-
-This function returns a reference to a hash. The hash elements contain information about the upcoming race.
-The hash looks like this:
-
-    {
-      'country'    => 'Canada',
-      'city'       => 'Montreal',
-      'time'       => '10/06/12 20:00:00',
-      'countdown'  => '7 days 21 hours'
-    }
-
-You can specify options via a hash refernce, `get_upcoming_rac( { cache => 0 } )`
 Available options:
+
+- points
+
+    Show how many points he has collected behind the drivers name. (defautl is "yes")
+
+- length
+
+    How long the list should be (defautl is top 5)
 
 - cache
 
     Set this to 0, to not use the internal cache mechanism. This will disable reading form the cache file, it will still write the results of the call to it.
 
-# INTERNALS
+- year
 
-This module caches the results fetched from f1.com for futher use. Since the actual data only changes after a race, it only needs to fetch it again if the cache is older then the previous race.
+    Specify wich year you want the results from. (defautl is the current year)
 
-# AUTHOR
+    ## get\_upcoming\_race()
 
-Freek Kalter
+    This function returns a reference to a hash. The hash elements contain information about the upcoming race.
+    The hash looks like this:
 
-freek@kalteronline.org
+        {
+          'country'    => 'Canada',
+          'city'       => 'Montreal',
+          'time'       => '10/06/12 20:00:00',
+          'countdown'  => '7 days 21 hours'
+        }
 
-[http://kalteronline.org](http://kalteronline.org)
+    You can specify options via a hash refernce, `get_upcoming_rac( { cache => 0 } )`
+    Available options:
 
-# COPYRIGHT
+    - cache
 
-This module is distributed under the same lincense as perl5 itself.
+        Set this to 0, to not use the internal cache mechanism. This will disable reading form the cache file, it will still write the results of the call to it.
+
+    # INTERNALS
+
+    This module caches the results fetched from f1.com for futher use. Since the actual data only changes after a race, it only needs to fetch it again if the cache is older then the previous race.
+
+    # AUTHOR
+
+    Freek Kalter
+
+    freek@kalteronline.org
+
+    [http://kalteronline.org](http://kalteronline.org)
+
+    # COPYRIGHT
+
+    This module is distributed under the same lincense as perl5 itself.

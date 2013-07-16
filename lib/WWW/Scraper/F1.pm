@@ -1,7 +1,4 @@
 package WWW::Scraper::F1;
-{
-  $WWW::Scraper::F1::VERSION = '0.007';
-}
 
 use v5.14;
 use strict;
@@ -23,12 +20,12 @@ our @EXPORT = qw(get_upcoming_race get_top_championship);
 
 sub get_upcoming_race {
     my $options = shift;
-    my $total_info = &get_info( $options->{cache} // "1" , $options->{test});
+    my $total_info = &get_info( $options->{cache} // "1", $options->{test} );
 
     my $race_info = $total_info->{'race_info'};
     my $output    = '';
-    if ( !defined($race_info) ){
-        return undef;
+    if ( !defined($race_info) ) {
+        return;
     }
 
     my $now = $race_info->{'now'};
@@ -66,12 +63,14 @@ sub get_top_championship {
     $options->{points} ||= "yes";
     $options->{length} ||= 5;
     $options->{cache}  ||= "1";
-    $options->{year}  ||= DateTime->now()->year;
+    $options->{year}   ||= DateTime->now()->year;
     return if $options->{length} < 1;
-    my $total_info         = &get_info( $options->{cache}, $options->{test}, $options->{year} );
+    my $total_info =
+      &get_info( $options->{cache}, $options->{test}, $options->{year} );
     my $championship_table = $total_info->{'championship_info'};
-    if( !defined($championship_table) ){
-        return undef;
+
+    if ( !defined($championship_table) ) {
+        return;
     }
 
     my @ra = ();
@@ -97,8 +96,8 @@ sub get_info {
         $cache_content = retrieve($cache_name);
 
         if ( $now > $cache_content->{'race_info'}->{'time'} ) {
-            my $web_content = &build_from_internet(undef, $year);
-            return undef if not $web_content;
+            my $web_content = &build_from_internet( undef, $year );
+            return if not $web_content;
             $total_info = &extract_info_from_web_content($web_content);
             store $total_info, $cache_name;
         }
@@ -108,8 +107,8 @@ sub get_info {
 
     }
     else {    #get info from web, extract info and put it in a cacheble hash
-        my $web_content = &build_from_internet($testing, $year);
-        return undef if not $web_content;
+        my $web_content = &build_from_internet( $testing, $year );
+        return if not $web_content;
         $total_info = &extract_info_from_web_content($web_content);
         store $total_info, $cache_name;
     }
@@ -121,33 +120,40 @@ sub build_from_internet {
     my $test = shift || undef;
     my $year = shift;
     my %info = ();
-    my ($race_info_content, $championship_content);
-    if( $test ){
-        $race_info_content = decode_utf8( do_GET($test->{upcoming}) );
-    }else{
-        $race_info_content = decode_utf8( do_GET("http://www.formula1.com/default.html") );
+    my ( $race_info_content, $championship_content );
+    if ($test) {
+        $race_info_content = decode_utf8( do_GET( $test->{upcoming} ) );
+    }
+    else {
+        $race_info_content =
+          decode_utf8( do_GET("http://www.formula1.com/default.html") );
     }
     if ( !$race_info_content ) {    #get failed (no internet connection)
         print "race_info: Could not fetch form inet and no cache\n";
         $info{'race_content'} = undef;
-    }else{
-        $info{'race_content'}         = $race_info_content;
+    }
+    else {
+        $info{'race_content'} = $race_info_content;
     }
 
     my $now = DateTime->now();
-    if( $test ){
-        $championship_content = decode_utf8( do_GET( $test->{championship } ) );
-    }else{
-        #$championship_content = decode_utf8( do_GET( "http://www.formula1.com/results/driver/" . $now->year ) );
-        $championship_content = decode_utf8( do_GET( "http://www.formula1.com/results/driver/$year" ) );
+    if ($test) {
+        $championship_content = decode_utf8( do_GET( $test->{championship} ) );
+    }
+    else {
+#$championship_content = decode_utf8( do_GET( "http://www.formula1.com/results/driver/" . $now->year ) );
+        $championship_content =
+          decode_utf8( do_GET("http://www.formula1.com/results/driver/$year") );
     }
     if ( !$championship_content ) {    #get failed (no internet connection)
-        print "championship: Could not fetch from (no results yet this season?) and no cache\n";
+        print
+"championship: Could not fetch from (no results yet this season?) and no cache\n";
         $info{'championship_content'} = undef;
     }
     $info{'championship_content'} = $championship_content;
-    #    open( my $rc_info, "<", $test->{upcoming} ) or die "Could not open $test->{upcoming}: $!";
-    #    open( my $chmp_info, "<", $test->{championship} ) or die "Could not open $test->{upcoming}: $!";
+
+#    open( my $rc_info, "<", $test->{upcoming} ) or die "Could not open $test->{upcoming}: $!";
+#    open( my $chmp_info, "<", $test->{championship} ) or die "Could not open $test->{upcoming}: $!";
     return \%info;
 }
 
@@ -158,35 +164,40 @@ sub extract_info_from_web_content {
     my $race_info;
     my $root = HTML::TreeBuilder->new;
 
-    if( $web_content->{'race_content'} ){
+    if ( $web_content->{'race_content'} ) {
+
         #race time extraction
         foreach my $line ( split( '\n', $web_content->{'race_content'} ) ) {
             if ( $line =~ m/grand_prix\[0\]\.sessions/ ) {
                 $line =~ m/'Race','(.+)'/;
-                my $parser = DateTime::Format::Natural->new( time_zone => 'GMT' );
-                my $dt = $parser->parse_datetime( $parser->extract_datetime($1) );
-                $dt->set_time_zone( DateTime::TimeZone->new( name => 'local' ) );  #convert timezone to local
+                my $parser =
+                  DateTime::Format::Natural->new( time_zone => 'GMT' );
+                my $dt =
+                  $parser->parse_datetime( $parser->extract_datetime($1) );
+                $dt->set_time_zone( DateTime::TimeZone->new( name => 'local' ) )
+                  ;    #convert timezone to local
                 $race_info->{time} = $dt;
             }
         }
         $root->parse( $web_content->{'race_content'} );
         $race_info->{country} =
-          ucfirst
-          lc $root->find_by_attribute( "id", "country_name" )->as_trimmed_text();
+          ucfirst lc $root->find_by_attribute( "id", "country_name" )
+          ->as_trimmed_text();
         $race_info->{city} =
           $root->find_by_attribute( "id", "city_name" )->as_trimmed_text();
 
         $race_info->{city} =~ s/[\P{alpha}]//;
-        $race_info->{city} = ucfirst lc
-          $race_info->{city};  #strip the html gunk, by removing all Non-alpha chars
+        $race_info->{city} = ucfirst lc $race_info->{city}
+          ;    #strip the html gunk, by removing all Non-alpha chars
 
         $total_info->{'race_info'} = $race_info;
-    }else{
+    }
+    else {
         $total_info->{'race_info'} = undef;
     }
 
     ################   extract championship info from web_content
-    if( $web_content->{'championship_content'} ){
+    if ( $web_content->{'championship_content'} ) {
         $root->parse( $web_content->{'championship_content'} );
 
         my $table = $root->look_down(
@@ -203,7 +214,8 @@ sub extract_info_from_web_content {
                   ->{'points'} = $columns[4]->as_text();
             }
         }
-    }else{
+    }
+    else {
         $total_info->{'championship_info'} = undef;
     }
     return $total_info;
@@ -258,6 +270,26 @@ returns the top 5 drivers like this.
    ]
 
 You can specify options via a hash reference C<< get_top_chamionship( {length => 3} ) >>
+
+Available options:
+
+=over 3
+
+=item points
+
+Show how many points he has collected behind the drivers name. (defautl is "yes")
+
+=item length
+
+How long the list should be (defautl is top 5)
+
+=item cache
+
+Set this to 0, to not use the internal cache mechanism. This will disable reading form the cache file, it will still write the results of the call to it.
+
+=item year
+
+Specify wich year you want the results from. (defautl is the current year)
 
 =head2 get_upcoming_race()
 
