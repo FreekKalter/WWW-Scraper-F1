@@ -291,6 +291,8 @@ Set this to 0, to not use the internal cache mechanism. This will disable readin
 
 Specify wich year you want the results from. (defautl is the current year)
 
+=back
+
 =head2 get_upcoming_race()
 
 This function returns a reference to a hash. The hash elements contain information about the upcoming race.
