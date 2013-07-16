@@ -1,4 +1,7 @@
 package WWW::Scraper::F1;
+{
+  $WWW::Scraper::F1::VERSION = '0.007';
+}
 
 use v5.14;
 use strict;
@@ -63,8 +66,9 @@ sub get_top_championship {
     $options->{points} ||= "yes";
     $options->{length} ||= 5;
     $options->{cache}  ||= "1";
+    $options->{year}  ||= DateTime->now()->year;
     return if $options->{length} < 1;
-    my $total_info         = &get_info( $options->{cache}, $options->{test} );
+    my $total_info         = &get_info( $options->{cache}, $options->{test}, $options->{year} );
     my $championship_table = $total_info->{'championship_info'};
     if( !defined($championship_table) ){
         return undef;
@@ -85,6 +89,7 @@ sub get_top_championship {
 sub get_info {
     my $cache      = shift;
     my $testing    = shift;
+    my $year       = shift;
     my $cache_name = "f1.cache";
     my ( $cache_content, $total_info );
     my $now = DateTime->now( time_zone => 'local' );
@@ -92,7 +97,7 @@ sub get_info {
         $cache_content = retrieve($cache_name);
 
         if ( $now > $cache_content->{'race_info'}->{'time'} ) {
-            my $web_content = &build_from_internet();
+            my $web_content = &build_from_internet(undef, $year);
             return undef if not $web_content;
             $total_info = &extract_info_from_web_content($web_content);
             store $total_info, $cache_name;
@@ -103,7 +108,7 @@ sub get_info {
 
     }
     else {    #get info from web, extract info and put it in a cacheble hash
-        my $web_content = &build_from_internet($testing);
+        my $web_content = &build_from_internet($testing, $year);
         return undef if not $web_content;
         $total_info = &extract_info_from_web_content($web_content);
         store $total_info, $cache_name;
@@ -114,6 +119,7 @@ sub get_info {
 
 sub build_from_internet {
     my $test = shift || undef;
+    my $year = shift;
     my %info = ();
     my ($race_info_content, $championship_content);
     if( $test ){
@@ -132,7 +138,8 @@ sub build_from_internet {
     if( $test ){
         $championship_content = decode_utf8( do_GET( $test->{championship } ) );
     }else{
-        $championship_content = decode_utf8( do_GET( "http://www.formula1.com/results/driver/" . $now->year ) );
+        #$championship_content = decode_utf8( do_GET( "http://www.formula1.com/results/driver/" . $now->year ) );
+        $championship_content = decode_utf8( do_GET( "http://www.formula1.com/results/driver/$year" ) );
     }
     if ( !$championship_content ) {    #get failed (no internet connection)
         print "championship: Could not fetch from (no results yet this season?) and no cache\n";
