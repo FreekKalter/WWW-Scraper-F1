@@ -8,13 +8,13 @@ use open qw(:std :utf8);
 use charnames qw(:full :short);
 
 use parent qw(Exporter);
-use Encode 2.47;
-use HTML::TreeBuilder 5.03;
-use LWP 6.04;
-use DateTime::Format::Natural 1.00;
-use DateTime::Format::Duration 1.03;
-use Time::Piece 1.20;
-use Storable 2.39;
+use Encode;
+use HTML::TreeBuilder;
+use LWP;
+use DateTime::Format::Natural;
+use DateTime::Format::Duration;
+use Time::Piece;
+use Storable;
 
 our @EXPORT = qw(get_upcoming_race get_top_championship);
 
